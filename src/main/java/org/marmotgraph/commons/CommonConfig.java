@@ -1,11 +1,8 @@
 package org.marmotgraph.commons;
 
-import org.marmotgraph.commons.controller.ThemeController;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,11 +14,31 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAutoConfiguration
 public class CommonConfig {
 
-    public static final String ASSET_CACHE_MANAGER = "org.marmotgraph.commons.AssetCacheManager";
+    private final String tenant;
+    private final String hostName;
+    private final String apiVersion;
+    private final String commit;
 
-    // In-memory cache
-    @Bean(name = ASSET_CACHE_MANAGER)
-    public CacheManager assetCacheManager() {
-        return new ConcurrentMapCacheManager(ThemeController.ASSET_CACHE);
+    public CommonConfig(@Value("${org.marmotgraph.tenant:default}")  String tenant, @Value("${org.marmotgraph.core.host}") String hostName, @Value("${org.marmotgraph.core.apiVersion:v3}") String apiVersion, @Value("${org.marmotgraph.commit:unknown}") String commit) {
+        this.tenant = tenant;
+        this.hostName = hostName;
+        this.apiVersion = apiVersion;
+        this.commit = commit;
+    }
+
+    public String getTenant() {
+        return tenant;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public String getCommit() {
+        return commit;
     }
 }
