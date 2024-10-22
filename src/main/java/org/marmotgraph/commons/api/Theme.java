@@ -12,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping("${org.marmotgraph.api.root:}/theme")
 @RestController
@@ -36,7 +37,10 @@ public class Theme {
         if (SUPPORTED_ASSETS.contains(asset.toLowerCase())) {
             FileResponse fileResponse = themeController.readAsset(asset, darkMode);
             if (fileResponse != null) {
-                return new ResponseEntity<>(new ByteArrayResource(fileResponse.bytes()), CollectionUtils.toMultiValueMap(fileResponse.headers()), HttpStatus.OK);
+                Map<String, List<String>> headers = new HashMap<>(fileResponse.headers());
+                Set<String> invalidKeys = headers.keySet().stream().filter(h -> h.startsWith(":")).collect(Collectors.toSet()); //We want to remove HTTP2 headers for now
+                invalidKeys.forEach(headers::remove);
+                return new ResponseEntity<>(new ByteArrayResource(fileResponse.bytes()), CollectionUtils.toMultiValueMap(headers), HttpStatus.OK);
             }
             return ResponseEntity.notFound().build();
         } else {
