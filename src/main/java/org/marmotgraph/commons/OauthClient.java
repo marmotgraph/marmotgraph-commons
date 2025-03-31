@@ -26,10 +26,11 @@ package org.marmotgraph.commons;
 import org.marmotgraph.commons.controller.CoreController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.RemoveAuthorizedClientOAuth2AuthorizationFailureHandler;
@@ -65,7 +66,9 @@ public class OauthClient {
     }
 
     @Bean
-    WebClient webClient(ClientRegistrationRepository clientRegistrations, OAuth2AuthorizedClientService authorizedClientService, HttpServletRequest request, ConfigurableEnvironment environment) {
+    @Primary
+    @Qualifier("dualAuth")
+    WebClient dualAuthWebClient(ClientRegistrationRepository clientRegistrations, OAuth2AuthorizedClientService authorizedClientService, HttpServletRequest request, ConfigurableEnvironment environment) {
         AuthorizedClientServiceOAuth2AuthorizedClientManager clientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrations, authorizedClientService);
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientManager);
         oauth2.setAuthorizationFailureHandler(new RemoveAuthorizedClientOAuth2AuthorizationFailureHandler(
@@ -92,6 +95,18 @@ public class OauthClient {
              *  it would be overwritten by the above exchange filter.
              */
             r.header(USER_AUTHORIZATION, request.getHeader(AUTHORIZATION));
+        }).build();
+    }
+
+    @Bean
+    @Qualifier("singleAuth")
+    WebClient singleAuth(HttpServletRequest request) {
+        return WebClient.builder().exchangeStrategies(exchangeStrategies).defaultRequest(r -> {
+            /**
+             * We just reuse the original authorization header for the given request and we
+             * explicitly don't want a client authorization
+             */
+            r.header(AUTHORIZATION, request.getHeader(AUTHORIZATION));
         }).build();
     }
 
