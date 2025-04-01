@@ -5,7 +5,8 @@
     <artifactId>marmotgraph-commons</artifactId>
     <version>0.0.4</version>
     <name>marmotgraph-commons</name>
-    <description>This is the source of a Java library providing common functionalities for all MarmotGraph components</description>
+    <description>This is the source of a Java library providing common functionalities for all MarmotGraph components
+    </description>
     <packaging>jar</packaging>
     <url>https://marmotgraph.org</url>
     <properties>
@@ -51,6 +52,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
