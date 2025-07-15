@@ -2,6 +2,9 @@ package org.marmotgraph.commons.api;
 
 import org.marmotgraph.commons.controller.CoreController;
 import org.marmotgraph.commons.models.FileResponse;
+import org.marmotgraph.commons.models.ForbiddenException;
+import org.marmotgraph.commons.models.UserRoles;
+import org.marmotgraph.commons.service.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -14,11 +17,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RequestMapping("${org.marmotgraph.api.root:}/theme")
+@RequestMapping("${org.marmotgraph.api.root:}/")
 @RestController
 public class Theme {
 
@@ -26,12 +30,30 @@ public class Theme {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final List<String> SUPPORTED_ASSETS = Arrays.asList("favicon", "background", "logo", "css");
+    private final UserClient userClient;
 
-    public Theme(CoreController themeController) {
+
+    public Theme(CoreController themeController, UserClient userClient) {
         this.themeController = themeController;
+        this.userClient = userClient;
     }
 
-    @GetMapping("{asset}")
+
+
+    @PutMapping("tenant/{tenant}")
+    public void setTenantDynamically(@PathVariable("tenant") String tenant){
+        UserRoles userRoles = userClient.getUserRoles();
+        if(userRoles.isGlobalAdmin()) {
+            themeController.setTenantDynamically(tenant);
+        }
+        else{
+            throw new ForbiddenException("You are not allowed to set the tenant since you need to be a global administrator to do so.");
+        }
+    }
+
+
+
+    @GetMapping("theme/{asset}")
     @ResponseBody
     public ResponseEntity<Resource> getAsset(@PathVariable("asset") String asset, @RequestParam(value = "darkMode", required = false) boolean darkMode) {
         if (SUPPORTED_ASSETS.contains(asset.toLowerCase())) {

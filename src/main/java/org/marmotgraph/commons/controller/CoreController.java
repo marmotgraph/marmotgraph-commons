@@ -5,9 +5,11 @@ import org.marmotgraph.commons.CommonConfig;
 import org.marmotgraph.commons.models.FileResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,10 +33,17 @@ public class CoreController {
     private final CommonConfig commonConfig;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private String dynamicTenant = null;
+
     public CoreController(CommonConfig commonConfig) {
         this.httpClient = HttpClient.newHttpClient();
         ;
         this.commonConfig = commonConfig;
+    }
+
+    @CacheEvict(value = {ASSET_CACHE, AUTHENTICATION_CACHE, TENANT_INFORMATION_CACHE}, allEntries = true)
+    public void setTenantDynamically(@PathVariable("tenant") String tenant){
+        this.dynamicTenant = tenant;
     }
 
     @CachePut(value = ASSET_CACHE, unless = "#result=null")
@@ -135,7 +144,7 @@ public class CoreController {
     }
 
     private String buildTenantUrl() {
-        return String.format("%s/tenants/%s", buildCoreRootUrl(), commonConfig.getTenant());
+        return String.format("%s/tenants/%s", buildCoreRootUrl(), dynamicTenant == null ?  commonConfig.getTenant() : dynamicTenant);
     }
 
     private String buildTenantAssetsUrl(String asset, boolean darkMode) {

@@ -39,12 +39,17 @@ public class IdController {
 
     public IdController(CoreController coreController) {
         Map<String, Object> tenantInformation = coreController.getTenantInformation();
-        Object idNamespace = tenantInformation.get("idNamespace");
-        String idPrefix = idNamespace != null ? idNamespace.toString() : null;
-        if (idPrefix != null) {
-            this.kgCoreInstancesPrefix = idPrefix.endsWith("/") ? idPrefix : idPrefix + "/";
-        } else {
-            this.kgCoreInstancesPrefix = null;
+        if(tenantInformation != null) {
+            Object idNamespace = tenantInformation.get("idNamespace");
+            String idPrefix = idNamespace != null ? idNamespace.toString() : null;
+            if (idPrefix != null) {
+                this.kgCoreInstancesPrefix = idPrefix.endsWith("/") ? idPrefix : idPrefix + "/";
+            } else {
+                this.kgCoreInstancesPrefix = null;
+            }
+        }
+        else{
+            throw new RuntimeException("Was not able to connect to core");
         }
     }
 

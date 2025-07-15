@@ -23,6 +23,7 @@
 
 package org.marmotgraph.commons;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.marmotgraph.commons.controller.CoreController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,6 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
