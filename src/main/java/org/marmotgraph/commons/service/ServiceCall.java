@@ -31,20 +31,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class ServiceCall {
 
-    private final WebClient webClient;
+    private final WebClient dualAuthWebClient;
+    private final WebClient singleAuthWebClient;
     private final CommonConfig commonConfig;
 
-
-    public ServiceCall(WebClient webClient, CommonConfig commonConfig) {
-        this.webClient = webClient;
+    public ServiceCall(@Qualifier("dualAuth") WebClient dualAuthWebClient, @Qualifier("singleAuth") WebClient singleAuthWebClient, CommonConfig commonConfig) {
+        this.dualAuthWebClient = dualAuthWebClient;
+        this.singleAuthWebClient = singleAuthWebClient;
         this.commonConfig = commonConfig;
     }
 
-    public String url(String relativeUri) {
+    public String url(String relativeUri){
         return String.format("%s://%s/%s/%s", commonConfig.getHostName().startsWith("localhost") ? "http" : "https", commonConfig.getHostName(), commonConfig.getApiVersion(), relativeUri);
     }
 
-    public WebClient client() {
-        return webClient;
+    public WebClient client(boolean dualAuth) {
+        return dualAuth ? dualAuthWebClient : singleAuthWebClient;
     }
 }

@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.marmotgraph</groupId>
     <artifactId>marmotgraph-commons</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <name>marmotgraph-commons</name>
     <description>This is the source of a Java library providing common functionalities for all MarmotGraph components.
     </description>

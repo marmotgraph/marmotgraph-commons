@@ -24,57 +24,15 @@
 
 package org.marmotgraph.commons.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Map;
+import java.util.UUID;
 
 @Getter
-public class CoreResult<T> {
-
-    private T data;
-    private String message;
-    private Error error;
-    private Integer total;
-    private Integer size;
-    private Integer from;
-
-
-    @JsonProperty("totalResults")
-    public CoreResult<T> setTotalResults(Integer total) {
-        this.total = total;
-        return this;
-    }
-
-    public CoreResult<T> setSize(Integer size) {
-        this.size = size;
-        return this;
-    }
-
-    public CoreResult<T> setFrom(Integer from) {
-        this.from = from;
-        return this;
-    }
-
-    public CoreResult<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
-
-
-    public CoreResult<T> setError(Error error) {
-        this.error = error;
-        return this;
-    }
-
-    public CoreResult<T> setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public static class Single extends CoreResult<Map<String, Object>> {
-    }
-
-    public static class List extends CoreResult<java.util.List<Map<String, Object>>> {
-    }
+@Setter
+public class Error {
+        private int code;
+        private String message;
+        private UUID instanceId;
 }
