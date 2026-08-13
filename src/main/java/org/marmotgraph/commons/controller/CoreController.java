@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  * Copyright 2021 - 2024 EBRAINS AISBL
- * Copyright 2024 - 2025 ETH Zurich
+ * Copyright 2024 - 2026 ETH Zurich
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ public class CoreController {
     }
 
     private String buildCoreRootUrl() {
-        return String.format("https://%s/%s", commonConfig.getHostName(), commonConfig.getApiVersion());
+        return String.format("http%s://%s/%s", commonConfig.getHostName().startsWith("localhost") ? "" : "s", commonConfig.getHostName(), commonConfig.getApiVersion());
     }
 
     private String buildTenantUrl() {

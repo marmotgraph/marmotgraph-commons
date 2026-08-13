@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  * Copyright 2021 - 2024 EBRAINS AISBL
- * Copyright 2024 - 2025 ETH Zurich
+ * Copyright 2024 - 2026 ETH Zurich
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
 package org.marmotgraph.commons.service;
 
 import org.marmotgraph.commons.CommonConfig;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
