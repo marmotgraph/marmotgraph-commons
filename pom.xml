@@ -1,7 +1,7 @@
 <!--
   ~ Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
   ~ Copyright 2021 - 2024 EBRAINS AISBL
-  ~ Copyright 2024 - 2025 ETH Zurich
+  ~ Copyright 2024 - 2026 ETH Zurich
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -48,6 +48,14 @@
     <scm>
         <url>https://github.com/marmotgraph/marmotgraph-commons.git</url>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github-packages</id>
+            <url>https://maven.pkg.github.com/marmotgraph/marmotgraph-commons</url>
+        </repository>
+    </distributionManagement>
+
     <developers>
         <developer>
             <name>Oliver Schmid</name>
@@ -129,7 +137,7 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
                 <version>0.6.0</version>
@@ -137,7 +145,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                 </configuration>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -162,7 +170,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <executions>
@@ -178,7 +186,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
 
